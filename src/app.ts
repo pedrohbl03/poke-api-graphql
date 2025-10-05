@@ -3,15 +3,7 @@ import cors from 'cors';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express5';
 import { GraphQLContext } from './types/graphql-context.type';
-
-const typeDefs = `#graphql
-  type Query {
-    _empty: String
-  }
-  type Mutation {
-    _empty: String
-  }
-`;
+import typeDefs from './schema';
 
 const resolvers = {
   Query: {

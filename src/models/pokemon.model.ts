@@ -17,6 +17,11 @@ const pokemonSchema = new mongoose.Schema({
     type: Number,
     default: 1
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
 },
   {
     timestamps: true,
@@ -25,13 +30,12 @@ const pokemonSchema = new mongoose.Schema({
   }
 );
 
-
 pokemonSchema.statics.powerLevelValidator = function (value: number) {
   return value >= 1 && value <= 100;
 };
 
-pokemonSchema.statics.favoritesExceededValidator = async function () {
-  const count = await this.countDocuments({ favorite: true });
+pokemonSchema.statics.favoritesExceededValidator = async function (userId: string) {
+  const count = await this.countDocuments({ favorite: true, user: userId });
   return count < 4;
 };
 
