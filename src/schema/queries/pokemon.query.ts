@@ -1,7 +1,7 @@
 const pokemonQueries =`#graphql
   extend type Query {
     pokemons: [Pokemon!]
-    pokemon(id: ID!): Pokemon
+    pokemon(name: String!): Pokemon
   }
 `;
 

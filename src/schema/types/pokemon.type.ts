@@ -1,6 +1,5 @@
 const pokemonType = `#graphql
   type Pokemon {
-    id: ID!
     name: String!
     height: Int
     weight: Int

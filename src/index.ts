@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import app from "./app";
-import config from "./config";
+import envVars from "./config/env";
 import logger from "./utils/logger";
 
-const port = config.port;
-const mongoUri = config.mongoUri;
+const port = envVars.port;
+const mongoUri = envVars.mongoUri;
 
 console.log('Mongo URI:', mongoUri);
 

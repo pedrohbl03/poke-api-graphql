@@ -19,11 +19,6 @@ const typeDefs = [
   types.pokemonType,
   queries.pokemonQueries,
   mutations.pokemonMutations,
-
-  // User Schema
-  types.userType,
-  queries.userQueries,
-  mutations.userMutations
 ];
 
 export default typeDefs;
