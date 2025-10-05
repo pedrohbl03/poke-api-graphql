@@ -1,0 +1,1 @@
+export { default as pokemonType } from './pokemon.type';

@@ -1,0 +1,46 @@
+{
+  "name": "poke-api-graphql",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"node --import tsx src/index.ts\"",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "lint": "eslint . --ext .ts",
+    "docker-compose:production": "docker-compose -f docker-compose.prod.yml up --build",
+    "docker-compose:development": "docker-compose -f docker-compose.dev.yml up --build"
+  },
+  "keywords": [
+    "GraphQL",
+    "API",
+    "PokeAPI",
+    "Node.js",
+    "Express",
+    "Apollo Server"
+  ],
+  "author": "Pedro Lima",
+  "license": "ISC",
+  "description": "A GraphQL API for Pokémon data using PokeAPI, built with Node.js, Express, and Apollo Server.",
+  "dependencies": {
+    "@apollo/server": "^5.0.0",
+    "@as-integrations/express5": "^1.1.2",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "graphql": "^16.11.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.19.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.6.2",
+    "jest": "^30.2.0",
+    "nodemon": "^3.1.10",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
