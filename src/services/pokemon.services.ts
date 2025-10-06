@@ -22,9 +22,11 @@ const getPokemonByName = async (name: string): Promise<Pokemon> => {
     throw new NotFoundError('Pokemon not found');
   }
 
+  const attrs = additionalAttributes ? additionalAttributes.toJSON?.() ?? additionalAttributes : {};
+
   return {
     ...pokemon,
-    ...additionalAttributes?.toJSON()
+    ...attrs
   };
 };
 
@@ -65,6 +67,10 @@ const createPokemonAttributes = async (data: PokemonAttributesInput): Promise<Po
     throw new BadRequestError('Pokemon attributes already exist', 'DUPLICATE_POKEMON_ATTRIBUTES');
   }
 
+  if (data.powerLevel && !validatePowerLevel(data.powerLevel)) {
+    throw new BadRequestError('Power level must be between 1 and 100', 'INVALID_POWER_LEVEL');
+  }
+
   if (data.favorite && !await validateFavoritesLimit()) {
     throw new BadRequestError('Cannot favorite more than 3 Pokemons', 'FAVORITES_LIMIT_EXCEEDED');
   }
@@ -75,9 +81,11 @@ const createPokemonAttributes = async (data: PokemonAttributesInput): Promise<Po
     throw new BadRequestError('Failed to create Pokemon attributes', 'CREATE_POKEMON_ATTRIBUTES_FAILED');
   }
 
+  const attrs = newAttributes ? newAttributes.toJSON?.() ?? newAttributes : {};
+
   return {
     ...pokemon,
-    ...newAttributes.toJSON()
+    ...attrs
   };
 };
 
@@ -86,6 +94,10 @@ const updatePokemonAttributes = async (data: PokemonAttributesInput): Promise<Po
 
   if (!existingAttributes) {
     throw new NotFoundError('Pokemon attributes not found');
+  }
+  
+  if (data.powerLevel && !validatePowerLevel(data.powerLevel)) {
+    throw new BadRequestError('Power level must be between 1 and 100', 'INVALID_POWER_LEVEL');
   }
 
   if (data.favorite && !await validateFavoritesLimit()) {
@@ -107,9 +119,11 @@ const updatePokemonAttributes = async (data: PokemonAttributesInput): Promise<Po
 
   const pokemon = await getPokemonByName(data.name);
 
+  const attrs = updatedAttributes ? updatedAttributes.toJSON?.() ?? updatedAttributes : {};
+
   return {
     ...pokemon,
-    ...updatedAttributes.toJSON()
+    ...attrs
   };
 };
 
@@ -121,6 +135,10 @@ const deletePokemonAttributes = async (name: string): Promise<boolean> => {
 const validateFavoritesLimit = async (): Promise<boolean> => {
   const favorites = await PokemonRepository.findFavoritePokemonAttributes();
   return favorites.length < 3;
+};
+
+const validatePowerLevel = (powerLevel?: number): boolean => {
+  return powerLevel === undefined || (powerLevel >= 1 && powerLevel <= 100);
 };
 
 const PokemonService: IPokemonService = {

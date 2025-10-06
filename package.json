@@ -4,7 +4,9 @@
   "main": "./src/index.ts",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"node --import tsx src/index.ts\"",
     "start": "node dist/index.js",
     "build": "tsc",
@@ -42,10 +44,13 @@
     "@graphql-codegen/typescript-resolvers": "^5.1.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.6.2",
     "jest": "^30.2.0",
+    "mongodb-memory-server": "^10.2.2",
     "nodemon": "^3.1.10",
     "prettier": "^3.6.2",
+    "ts-jest": "^29.4.4",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   }
