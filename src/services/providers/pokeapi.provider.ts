@@ -1,0 +1,23 @@
+import { IPokemon } from './../../types/pokeapi-response.type';
+import envVars from "../../config/env";
+import apiFetch from "../../utils/apiFetch";
+
+interface IPokeApiProvider {
+  getPokemon: (name: string) => Promise<IPokemon>;
+  getPokemons: (limit: number, offset: number) => Promise<IPokemon[]>;
+}
+
+const getPokemon = async (name: string): Promise<IPokemon> => {
+  const response = await apiFetch<IPokemon>(`${envVars.pokeApiBaseUrl}/pokemon/${name.toLowerCase()}`, { method: 'GET' });
+  return response;
+}
+
+const getPokemons = async (limit: number, offset: number): Promise<IPokemon[]> => {
+  const response = await apiFetch<IPokemon[]>(`${envVars.pokeApiBaseUrl}/pokemon?limit=${limit}&offset=${offset}`, { method: 'GET' });
+  return response;
+}
+
+export const PokeApiProvider: IPokeApiProvider = {
+  getPokemon,
+  getPokemons,
+};  

@@ -1,5 +1,5 @@
 import { PokemonService } from "../services";
-import { IPokemon } from "../types/pokeapi-response.type";
+import { PokemonAttributesInput } from "../types/graphql-generated.types";
 
 export const resolvers = {
   Query: {
@@ -12,10 +12,10 @@ export const resolvers = {
   },
 
   Mutation: {
-    createPokemonAttributes: async (_: any, { input }: { input: IPokemon }) => {
+    createPokemonAttributes: async (_: any, { input }: { input: PokemonAttributesInput }) => {
       return await PokemonService.createPokemonAttributes(input);
     },
-    updatePokemonAttributes: async (_: any, { name, input }: { name: string; input: Partial<IPokemon> }) => {
+    updatePokemonAttributes: async (_: any, { name, input }: { name: string; input: PokemonAttributesInput }) => {
       return await PokemonService.updatePokemonAttributes(name, input);
     },
     deletePokemonAttributes: async (_: any, { name }: { name: string }) => {
