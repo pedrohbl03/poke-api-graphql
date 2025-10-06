@@ -3,7 +3,7 @@ export interface IPokemon {
   url: string;
   height: number;
   weight: number;
-  types: string[];
+  types: IPokemonType[];
 }
 
 export interface IPaginatedListResponse {
@@ -11,4 +11,12 @@ export interface IPaginatedListResponse {
   next: string | null;
   previous: string | null;
   results: Partial<IPokemon>[];
+}
+
+export interface IPokemonType {
+  slot: number;
+  type: {
+    name: string;
+    url: string;
+  };
 }

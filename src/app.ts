@@ -4,15 +4,7 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@as-integrations/express5';
 import { GraphQLContext } from './types/graphql-context.type';
 import typeDefs from './schema';
-
-const resolvers = {
-  Query: {
-    _empty: () => 'Hello World!',
-  },
-  Mutation: {
-    _empty: () => 'Hello World!',
-  },
-};
+import resolvers from './resolvers';
 
 const app = express();
 

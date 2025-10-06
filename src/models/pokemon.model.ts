@@ -34,8 +34,6 @@ pokemonSchema.statics.favoritesExceededValidator = async function () {
   return count < 4;
 };
 
-pokemonSchema.index({ name: 1 });
-
 const Pokemon = mongoose.model('Pokemon', pokemonSchema);
 
 export default Pokemon;

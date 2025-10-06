@@ -4,7 +4,7 @@ import { PokemonAttributesInput } from "../types/graphql-generated.types";
 interface IPokemonRepository {
   findPokemonAttributesByName(name: string): Promise<InstanceType<typeof Pokemon> | null>;
   findAllPokemonAttributes(): Promise<InstanceType<typeof Pokemon>[]>;
-  createPokemonAttributesByName(name: string, data: PokemonAttributesInput): Promise<InstanceType<typeof Pokemon>>;
+  createPokemonAttributes(data: PokemonAttributesInput): Promise<InstanceType<typeof Pokemon>>;
   deletePokemonAttributesByName(name: string): Promise<InstanceType<typeof Pokemon> | null>;
 }
 
@@ -20,8 +20,8 @@ const findAllPokemonAttributes = async (): Promise<InstanceType<typeof Pokemon>[
     .exec();
 };
 
-const createPokemonAttributesByName = async (name: string, data: any): Promise<InstanceType<typeof Pokemon>> => {
-  const newPokemon = new Pokemon({ name, ...data });
+const createPokemonAttributes = async (data: any): Promise<InstanceType<typeof Pokemon>> => {
+  const newPokemon = new Pokemon({ ...data });
   await newPokemon.save();
 
   return newPokemon;
@@ -36,7 +36,7 @@ const deletePokemonAttributesByName = async (name: string): Promise<InstanceType
 const PokemonRepository: IPokemonRepository = {
   findPokemonAttributesByName,
   findAllPokemonAttributes,
-  createPokemonAttributesByName,
+  createPokemonAttributes,
   deletePokemonAttributesByName,
 };
 

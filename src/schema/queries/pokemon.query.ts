@@ -1,6 +1,6 @@
 const pokemonQueries =`#graphql
   extend type Query {
-    pokemons: [Pokemon!]
+    pokemons: PokemonPagination!
     pokemon(name: String!): Pokemon
   }
 `;

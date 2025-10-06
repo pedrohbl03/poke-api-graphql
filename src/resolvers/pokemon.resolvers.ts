@@ -1,7 +1,7 @@
 import { PokemonService } from "../services";
 import { PokemonAttributesInput } from "../types/graphql-generated.types";
 
-export const resolvers = {
+const pokemonResolvers = {
   Query: {
     pokemon: async (_: any, { name }: { name: string }) => {
       return PokemonService.getPokemonByName(name);
@@ -23,3 +23,5 @@ export const resolvers = {
     },
   },
 };
+
+export default pokemonResolvers;

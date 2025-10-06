@@ -21,6 +21,7 @@ export type Incremental<T> =
   | {
       [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
     };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
@@ -61,7 +62,7 @@ export type Pokemon = {
   name: Scalars["String"]["output"];
   nickname?: Maybe<Scalars["String"]["output"]>;
   powerLevel?: Maybe<Scalars["Int"]["output"]>;
-  types: Array<Scalars["String"]["output"]>;
+  types: Array<Maybe<PokemonType>>;
   weight?: Maybe<Scalars["Int"]["output"]>;
 };
 
@@ -72,11 +73,31 @@ export type PokemonAttributesInput = {
   powerLevel?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
+export type PokemonPagination = {
+  __typename?: "PokemonPagination";
+  count: Scalars["Int"]["output"];
+  next?: Maybe<Scalars["String"]["output"]>;
+  previous?: Maybe<Scalars["String"]["output"]>;
+  results: Array<Pokemon>;
+};
+
+export type PokemonType = {
+  __typename?: "PokemonType";
+  slot?: Maybe<Scalars["Int"]["output"]>;
+  type?: Maybe<PokemonTypeInfo>;
+};
+
+export type PokemonTypeInfo = {
+  __typename?: "PokemonTypeInfo";
+  name?: Maybe<Scalars["String"]["output"]>;
+  url?: Maybe<Scalars["String"]["output"]>;
+};
+
 export type Query = {
   __typename?: "Query";
   _empty?: Maybe<Scalars["String"]["output"]>;
   pokemon?: Maybe<Pokemon>;
-  pokemons?: Maybe<Array<Pokemon>>;
+  pokemons: PokemonPagination;
 };
 
 export type QueryPokemonArgs = {
@@ -210,6 +231,13 @@ export type ResolversTypes = ResolversObject<{
   Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   Pokemon: ResolverTypeWrapper<IPokemon>;
   PokemonAttributesInput: PokemonAttributesInput;
+  PokemonPagination: ResolverTypeWrapper<
+    Omit<PokemonPagination, "results"> & {
+      results: Array<ResolversTypes["Pokemon"]>;
+    }
+  >;
+  PokemonType: ResolverTypeWrapper<PokemonType>;
+  PokemonTypeInfo: ResolverTypeWrapper<PokemonTypeInfo>;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
   String: ResolverTypeWrapper<Scalars["String"]["output"]>;
 }>;
@@ -221,6 +249,11 @@ export type ResolversParentTypes = ResolversObject<{
   Mutation: Record<PropertyKey, never>;
   Pokemon: IPokemon;
   PokemonAttributesInput: PokemonAttributesInput;
+  PokemonPagination: Omit<PokemonPagination, "results"> & {
+    results: Array<ResolversParentTypes["Pokemon"]>;
+  };
+  PokemonType: PokemonType;
+  PokemonTypeInfo: PokemonTypeInfo;
   Query: Record<PropertyKey, never>;
   String: Scalars["String"]["output"];
 }>;
@@ -265,8 +298,45 @@ export type PokemonResolvers<
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   nickname?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   powerLevel?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
-  types?: Resolver<Array<ResolversTypes["String"]>, ParentType, ContextType>;
+  types?: Resolver<
+    Array<Maybe<ResolversTypes["PokemonType"]>>,
+    ParentType,
+    ContextType
+  >;
   weight?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+}>;
+
+export type PokemonPaginationResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes["PokemonPagination"] = ResolversParentTypes["PokemonPagination"],
+> = ResolversObject<{
+  count?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  next?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  previous?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  results?: Resolver<Array<ResolversTypes["Pokemon"]>, ParentType, ContextType>;
+}>;
+
+export type PokemonTypeResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes["PokemonType"] = ResolversParentTypes["PokemonType"],
+> = ResolversObject<{
+  slot?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
+  type?: Resolver<
+    Maybe<ResolversTypes["PokemonTypeInfo"]>,
+    ParentType,
+    ContextType
+  >;
+}>;
+
+export type PokemonTypeInfoResolvers<
+  ContextType = GraphQLContext,
+  ParentType extends
+    ResolversParentTypes["PokemonTypeInfo"] = ResolversParentTypes["PokemonTypeInfo"],
+> = ResolversObject<{
+  name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  url?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
 }>;
 
 export type QueryResolvers<
@@ -282,7 +352,7 @@ export type QueryResolvers<
     RequireFields<QueryPokemonArgs, "name">
   >;
   pokemons?: Resolver<
-    Maybe<Array<ResolversTypes["Pokemon"]>>,
+    ResolversTypes["PokemonPagination"],
     ParentType,
     ContextType
   >;
@@ -291,5 +361,8 @@ export type QueryResolvers<
 export type Resolvers<ContextType = GraphQLContext> = ResolversObject<{
   Mutation?: MutationResolvers<ContextType>;
   Pokemon?: PokemonResolvers<ContextType>;
+  PokemonPagination?: PokemonPaginationResolvers<ContextType>;
+  PokemonType?: PokemonTypeResolvers<ContextType>;
+  PokemonTypeInfo?: PokemonTypeInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 }>;
