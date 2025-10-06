@@ -5,6 +5,8 @@ import { expressMiddleware } from '@as-integrations/express5';
 import { GraphQLContext } from './types/graphql-context.type';
 import typeDefs from './schema';
 import resolvers from './resolvers';
+import errorPlugin from './middlewares/errorPlugin';
+import { GraphQLError } from 'graphql';
 
 const app = express();
 
@@ -19,6 +21,15 @@ const server = new ApolloServer<GraphQLContext>({
   typeDefs,
   resolvers,
   introspection: process.env.NODE_ENV !== 'production',
+  plugins: [errorPlugin],
+  formatError: (err) => {
+    return {
+      message: err.message,
+      code: err.extensions?.code || 'BAD_REQUEST',
+      details: err.extensions?.details,
+      path: err.path,
+    };
+  },
 });
 
 await server.start();

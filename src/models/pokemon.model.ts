@@ -4,7 +4,9 @@ const pokemonSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    lowercase: true,
+    trim: true
   },
   nickname: {
     type: String
@@ -15,24 +17,15 @@ const pokemonSchema = new mongoose.Schema({
   },
   powerLevel: {
     type: Number,
-    default: 1
+    default: 1,
+    min: [1, 'Power level must be at least 1'],
+    max: [100, 'Power level must be at most 100']
   }
 },
   {
     timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
   }
 );
-
-pokemonSchema.statics.powerLevelValidator = function (value: number) {
-  return value >= 1 && value <= 100;
-};
-
-pokemonSchema.statics.favoritesExceededValidator = async function () {
-  const count = await this.countDocuments({ favorite: true });
-  return count < 4;
-};
 
 const Pokemon = mongoose.model('Pokemon', pokemonSchema);
 

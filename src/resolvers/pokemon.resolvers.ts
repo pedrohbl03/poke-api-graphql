@@ -15,8 +15,8 @@ const pokemonResolvers = {
     createPokemonAttributes: async (_: any, { input }: { input: PokemonAttributesInput }) => {
       return await PokemonService.createPokemonAttributes(input);
     },
-    updatePokemonAttributes: async (_: any, { name, input }: { name: string; input: PokemonAttributesInput }) => {
-      return await PokemonService.updatePokemonAttributes(name, input);
+    updatePokemonAttributes: async (_: any, { input }: { input: PokemonAttributesInput }) => {
+      return await PokemonService.updatePokemonAttributes(input);
     },
     deletePokemonAttributes: async (_: any, { name }: { name: string }) => {
       return await PokemonService.deletePokemonAttributes(name);

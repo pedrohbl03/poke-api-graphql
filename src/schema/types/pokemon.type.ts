@@ -22,7 +22,7 @@ const pokemonType = `#graphql
   }
 
   input PokemonAttributesInput {
-    pokemonName: String!
+    name: String!
     nickname: String
     favorite: Boolean
     powerLevel: Int
@@ -30,8 +30,10 @@ const pokemonType = `#graphql
 
   type PokemonPagination {
     count: Int!
-    next: String
-    previous: String
+    hasNext: Boolean!
+    hasPrevious: Boolean!
+    page: Int!
+    totalPages: Int!
     results: [Pokemon!]!
   }
 

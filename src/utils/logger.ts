@@ -1,13 +1,13 @@
 const info = (...params: unknown[]) => {
-  console.info(...params);
+  console.info('📢 INFO:', ...params);
 };
 
 const error = (...params: unknown[]) => {
-  console.error(...params);
+  console.error('🚨 ERROR:', ...params);
 };
 
 const warn = (...params: unknown[]) => {
-  console.warn(...params);
+  console.warn('⚠️ WARN:', ...params);
 };
 
 export default {

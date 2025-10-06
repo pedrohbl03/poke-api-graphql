@@ -6,9 +6,6 @@ import logger from "./utils/logger";
 const port = envVars.port;
 const mongoUri = envVars.mongoUri;
 
-console.log('Mongo URI:', mongoUri);
-
-// connect to mongo db
 mongoose
   .connect(mongoUri)
   .then(() => {
@@ -16,6 +13,7 @@ mongoose
     // listen for requests
     app.listen(port, () => {
       logger.info(`Server is running on port ${port}`);
+      logger.info(`GraphQL endpoint: http://localhost:${port}/graphql`);
     });
   })
   .catch((error) => {

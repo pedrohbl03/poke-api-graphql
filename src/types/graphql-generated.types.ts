@@ -52,7 +52,6 @@ export type MutationDeletePokemonAttributesArgs = {
 
 export type MutationUpdatePokemonAttributesArgs = {
   input: PokemonAttributesInput;
-  name: Scalars["String"]["input"];
 };
 
 export type Pokemon = {
@@ -62,23 +61,25 @@ export type Pokemon = {
   name: Scalars["String"]["output"];
   nickname?: Maybe<Scalars["String"]["output"]>;
   powerLevel?: Maybe<Scalars["Int"]["output"]>;
-  types: Array<Maybe<PokemonType>>;
+  types?: Maybe<Array<PokemonType>>;
   weight?: Maybe<Scalars["Int"]["output"]>;
 };
 
 export type PokemonAttributesInput = {
   favorite?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name: Scalars["String"]["input"];
   nickname?: InputMaybe<Scalars["String"]["input"]>;
-  pokemonName: Scalars["String"]["input"];
   powerLevel?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type PokemonPagination = {
   __typename?: "PokemonPagination";
   count: Scalars["Int"]["output"];
-  next?: Maybe<Scalars["String"]["output"]>;
-  previous?: Maybe<Scalars["String"]["output"]>;
+  hasNext: Scalars["Boolean"]["output"];
+  hasPrevious: Scalars["Boolean"]["output"];
+  page: Scalars["Int"]["output"];
   results: Array<Pokemon>;
+  totalPages: Scalars["Int"]["output"];
 };
 
 export type PokemonType = {
@@ -102,6 +103,11 @@ export type Query = {
 
 export type QueryPokemonArgs = {
   name: Scalars["String"]["input"];
+};
+
+export type QueryPokemonsArgs = {
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  page?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -280,7 +286,7 @@ export type MutationResolvers<
     Maybe<ResolversTypes["Pokemon"]>,
     ParentType,
     ContextType,
-    RequireFields<MutationUpdatePokemonAttributesArgs, "input" | "name">
+    RequireFields<MutationUpdatePokemonAttributesArgs, "input">
   >;
 }>;
 
@@ -299,7 +305,7 @@ export type PokemonResolvers<
   nickname?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   powerLevel?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
   types?: Resolver<
-    Array<Maybe<ResolversTypes["PokemonType"]>>,
+    Maybe<Array<ResolversTypes["PokemonType"]>>,
     ParentType,
     ContextType
   >;
@@ -312,9 +318,11 @@ export type PokemonPaginationResolvers<
     ResolversParentTypes["PokemonPagination"] = ResolversParentTypes["PokemonPagination"],
 > = ResolversObject<{
   count?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
-  next?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  previous?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  hasNext?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  hasPrevious?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
+  page?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   results?: Resolver<Array<ResolversTypes["Pokemon"]>, ParentType, ContextType>;
+  totalPages?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
 }>;
 
 export type PokemonTypeResolvers<
@@ -354,7 +362,8 @@ export type QueryResolvers<
   pokemons?: Resolver<
     ResolversTypes["PokemonPagination"],
     ParentType,
-    ContextType
+    ContextType,
+    Partial<QueryPokemonsArgs>
   >;
 }>;
 

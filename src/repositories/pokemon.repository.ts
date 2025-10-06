@@ -8,6 +8,7 @@ interface IPokemonRepository {
   findFavoritePokemonAttributes(): Promise<InstanceType<typeof Pokemon>[]>;
   createPokemonAttributes(data: PokemonAttributesInput): Promise<InstanceType<typeof Pokemon>>;
   deletePokemonAttributesByName(name: string): Promise<InstanceType<typeof Pokemon> | null>;
+  updatePokemonAttributes(data: Partial<InstanceType<typeof Pokemon>> & { name: string }): Promise<InstanceType<typeof Pokemon> | null>;
 }
 
 const findPokemonAttributesByName = async (name: string): Promise<InstanceType<typeof Pokemon> | null> => {
@@ -42,8 +43,14 @@ const createPokemonAttributes = async (data: any): Promise<InstanceType<typeof P
 }
 
 const deletePokemonAttributesByName = async (name: string): Promise<InstanceType<typeof Pokemon> | null> => {
-  return await Pokemon
+  return Pokemon
     .findOneAndDelete({ name })
+    .exec();
+}
+
+const updatePokemonAttributes = async (data: Partial<InstanceType<typeof Pokemon>> & { name: string }): Promise<InstanceType<typeof Pokemon> | null> => {
+  return Pokemon
+    .findOneAndUpdate({ name: data.name }, data, { new: true })
     .exec();
 }
 
@@ -54,6 +61,7 @@ const PokemonRepository: IPokemonRepository = {
   findManyPokemonAttributesByNames,
   createPokemonAttributes,
   deletePokemonAttributesByName,
+  updatePokemonAttributes,
 };
 
 export default PokemonRepository;
