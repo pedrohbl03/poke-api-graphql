@@ -6,8 +6,8 @@ const pokemonResolvers = {
     pokemon: async (_: any, { name }: { name: string }) => {
       return PokemonService.getPokemonByName(name);
     },
-    pokemons: async (_: any, { limit, offset }: { limit?: number; offset?: number }) => {
-      return PokemonService.getAllPokemons(limit, offset);
+    pokemons: async (_: any, { page, limit }: { page?: number; limit?: number }) => {
+      return PokemonService.getAllPokemons(limit, page ? (page - 1) * (limit || 20) : 0);
     },
   },
 

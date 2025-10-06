@@ -3,7 +3,7 @@ const pokemonType = `#graphql
     name: String!
     height: Int
     weight: Int
-    types: [PokemonType]!
+    types: [PokemonType!]
 
     # Additional fields for local database
     nickname: String

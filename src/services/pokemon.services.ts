@@ -12,7 +12,7 @@ interface IPokemonService {
   deletePokemonAttributes(name: string): Promise<boolean>;
 };
 
-const getPokemonByName = async (name: string): Promise<Pokemon> => {  
+const getPokemonByName = async (name: string): Promise<Pokemon> => {
   const [pokemon, additionalAttributes] = await Promise.all([
     PokeApiProvider.getPokemon(name),
     PokemonRepository.findPokemonAttributesByName(name)
@@ -25,10 +25,10 @@ const getPokemonByName = async (name: string): Promise<Pokemon> => {
 };
 
 const getAllPokemons = async (limit: number = 20, offset: number = 0): Promise<PokemonPagination> => {
-  const [pokeApi, additionalAttributes] = await Promise.all([
-    PokeApiProvider.getPokemons(limit, offset),
-    PokemonRepository.findAllPokemonAttributes()
-  ]);
+  const pokeApi = await PokeApiProvider.getPokemons(limit, offset);
+  const additionalAttributes = await PokemonRepository.findManyPokemonAttributesByNames(
+    pokeApi.results.map((p: any) => p.name)
+  );
 
   return {
     count: pokeApi.count,
@@ -42,6 +42,21 @@ const getAllPokemons = async (limit: number = 20, offset: number = 0): Promise<P
 };
 
 const createPokemonAttributes = async (data: PokemonAttributesInput): Promise<Pokemon> => {
+
+  if (data.powerLevel && !validatePowerLevel(data.powerLevel)) {
+    throw new Error('Invalid power level');
+  }
+
+  if (data.favorite && !await validateFavoritesLimit()) {
+    throw new Error('Cannot favorite more than 3 Pokemons');
+  }
+
+  const favorites = await PokemonRepository.findFavoritePokemonAttributes();
+
+  if (favorites.length > 3) {
+    throw new Error('Cannot favorite more than 3 Pokemons');
+  }
+
   const newAttributes = await PokemonRepository.createPokemonAttributes(data);
 
   if (!newAttributes) {
@@ -57,11 +72,47 @@ const createPokemonAttributes = async (data: PokemonAttributesInput): Promise<Po
 };
 
 const updatePokemonAttributes = async (name: string, data: PokemonAttributesInput): Promise<Pokemon> => {
-  return {} as any;
+  const existingAttributes = await PokemonRepository.findPokemonAttributesByName(name);
+
+  if (!existingAttributes) {
+    throw new Error('Pokemon attributes not found');
+  }
+
+  if (data.powerLevel && !validatePowerLevel(data.powerLevel)) {
+    throw new Error('Invalid power level');
+  }
+
+  if (data.favorite && !await validateFavoritesLimit()) {
+    throw new Error('Cannot favorite more than 3 Pokemons');
+  }
+
+  const updatedAttributes = await PokemonRepository.createPokemonAttributes({ ...existingAttributes, ...data });
+
+  if (!updatedAttributes) {
+    throw new Error('Failed to update Pokemon attributes');
+  }
+
+  const pokemon = await getPokemonByName(name);
+
+  return {
+    ...pokemon,
+    ...updatedAttributes
+  };
 };
 
 const deletePokemonAttributes = async (name: string): Promise<boolean> => {
-  return {} as any;
+  const deleted = await PokemonRepository.deletePokemonAttributesByName(name);
+
+  return !!deleted;
+};
+
+const validatePowerLevel = (value: number): boolean => {
+  return value >= 1 && value <= 100;
+};
+
+const validateFavoritesLimit = async (): Promise<boolean> => {
+  const favorites = await PokemonRepository.findFavoritePokemonAttributes();
+  return favorites.length < 4;
 };
 
 const PokemonService: IPokemonService = {
